@@ -1,0 +1,5 @@
+aws_region    = "eu-east-1"
+instance_type = "t3.micro"
+ami_id        = "ami-04680790a315cd58d"
+key_name      = "jenserver"
+bucket_name   = "terraform-jenkins-v8-chauhan-2026"
