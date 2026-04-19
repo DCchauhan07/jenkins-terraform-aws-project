@@ -21,26 +21,20 @@ pipeline {
             }
         }
 
-        stage('Terraform Plan') {
+        stage('Terraform Destroy') {
             steps {
-                sh 'terraform plan -input=false -out=tfplan'
+                input message: 'Do you want to destroy Terraform-managed infrastructure?'
+                sh 'terraform destroy -input=false -auto-approve'
             }
         }
-
-        //stage('Terraform Apply') {
-        //    steps {
-       //        input message: 'Do you want to apply Terraform changes?'
-      //        sh 'terraform apply -input=false -auto-approve tfplan'
-     //      }
-    //   }
     }
 
     post {
         success {
-            echo 'Infrastructure provisioned successfully'
+            echo 'Terraform destroy completed successfully'
         }
         failure {
-            echo 'Pipeline failed'
+            echo 'Terraform destroy failed'
         }
     }
 }
