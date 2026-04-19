@@ -4,34 +4,35 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID     = credentials('aws-access-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
-        AWS_DEFAULT_REGION    = 'eu-west-1'
+        AWS_DEFAULT_REGION    = 'us-east-1'
+        TF_IN_AUTOMATION      = 'true'
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Terraform Init') {
             steps {
-                git branch: 'main', url: 'https://github.com/DCchauhan07/jenkins-terraform-aws-project.git'
+                sh 'terraform init -input=false'
             }
         }
 
-        stage('Terraform Init') {
+        stage('Terraform Validate') {
             steps {
-                sh 'terraform init'
+                sh 'terraform validate'
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                sh 'terraform plan'
+                sh 'terraform plan -input=false -out=tfplan'
             }
         }
 
-        stage('Terraform Apply') {
-            steps {
-                input message: 'Do you want to apply Terraform changes?'
-                sh 'terraform apply -auto-approve'
-            }
-        }
+        //stage('Terraform Apply') {
+        //    steps {
+       //        input message: 'Do you want to apply Terraform changes?'
+      //        sh 'terraform apply -input=false -auto-approve tfplan'
+     //      }
+    //   }
     }
 
     post {
